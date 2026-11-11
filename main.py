@@ -1,9 +1,7 @@
 from drafter import *
 from dataclasses import dataclass
 
-hide_debug_information() 
-set_website_title("Number System") 
-set_website_framed(False)
+
 @dataclass
 class Conversion:
     """Store the important values from one successful conversion."""
