@@ -3,103 +3,89 @@ from dataclasses import dataclass
 
 
 # ---------------------------------------------------------------------------
-# THEME: dark "engineering console" look with a faint blueprint grid,
-# monospace type, cyan/green accents, and terminal-style output panels.
+# THEME: clean, minimal, modern look: light background, system sans-serif
+# type, generous spacing, rounded controls, and a single indigo accent.
 # ---------------------------------------------------------------------------
 set_website_style("pico")
 
+SANS = "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Courier New', monospace"
 
 add_website_css("#drafter-body--", """
-    background-color: #070b14;
-    background-image:
-        linear-gradient(rgba(34, 211, 238, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34, 211, 238, 0.045) 1px, transparent 1px);
-    background-size: 32px 32px;
-    color: #cbd5e1;
-    font-family: """ + MONO + """;
+    background-color: #fafafa;
+    color: #1f2937;
+    font-family: """ + SANS + """;
     min-height: 100vh;
-    padding: 24px 24px 56px 24px;
+    padding: 56px max(24px, calc((100vw - 720px) / 2)) 80px max(24px, calc((100vw - 720px) / 2));
 """)
 add_website_css("#drafter-body-- h1", """
-    color: #22d3ee;
-    font-family: """ + MONO + """;
-    font-weight: 800;
-    font-size: 1.7rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    border-bottom: 1px solid #155e75;
-    padding-bottom: 10px;
-    text-shadow: 0 0 14px rgba(34, 211, 238, 0.45);
+    color: #111827;
+    font-family: """ + SANS + """;
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
 """)
 add_website_css("#drafter-body-- h2", """
-    color: #4ade80;
-    font-family: """ + MONO + """;
-    font-weight: 700;
-    font-size: 1.05rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 28px;
-""")
-add_website_css("#drafter-body-- h2::before", """
-    content: "// ";
-    color: #475569;
+    color: #111827;
+    font-family: """ + SANS + """;
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    margin-top: 40px;
+    margin-bottom: 8px;
 """)
 add_website_css("#drafter-body-- p, #drafter-body-- li", """
-    color: #cbd5e1;
-    font-family: """ + MONO + """;
-    font-size: 0.93rem;
+    color: #4b5563;
+    font-family: """ + SANS + """;
+    font-size: 1rem;
     line-height: 1.7;
 """)
 add_website_css("#drafter-body-- pre", """
-    background: #020617;
-    color: #86efac;
+    background: #f3f4f6;
+    color: #111827;
     font-family: """ + MONO + """;
-    font-size: 0.9rem;
-    line-height: 1.55;
-    border: 1px solid #164e63;
-    border-left: 4px solid #22d3ee;
-    border-radius: 6px;
-    padding: 14px 18px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
     overflow-x: auto;
-    box-shadow: 0 0 24px rgba(34, 211, 238, 0.07) inset;
+    box-shadow: none;
 """)
 add_website_css("#drafter-body-- button", """
-    background: rgba(34, 211, 238, 0.06);
-    color: #22d3ee;
-    border: 1px solid #22d3ee;
-    border-radius: 4px;
-    font-family: """ + MONO + """;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    padding: 8px 16px;
+    background: #111827;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    font-family: """ + SANS + """;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 9px 20px;
     margin: 4px 6px 4px 0;
-    box-shadow: 0 0 10px rgba(34, 211, 238, 0.15);
-    transition: all 0.15s ease;
+    box-shadow: none;
+    transition: background 0.15s ease, transform 0.15s ease;
 """)
 add_website_css("#drafter-body-- button:hover", """
-    background: #22d3ee;
-    color: #020617;
-    box-shadow: 0 0 18px rgba(34, 211, 238, 0.6);
+    background: #4f46e5;
+    transform: translateY(-1px);
 """)
 add_website_css("#drafter-body-- input, #drafter-body-- select", """
-    background-color: #0f172a;
-    color: #e2e8f0;
-    font-family: """ + MONO + """;
-    border: 1px solid #334155;
-    border-radius: 4px;
+    background-color: #ffffff;
+    color: #111827;
+    font-family: """ + SANS + """;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    box-shadow: none;
 """)
 add_website_css("#drafter-body-- input:focus, #drafter-body-- select:focus", """
-    border-color: #22d3ee;
-    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 """)
 add_website_css("#drafter-body-- ul", """
-    background-color: rgba(15, 23, 42, 0.85);
-    border: 1px solid #1e293b;
-    border-left: 4px solid #4ade80;
-    border-radius: 6px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
     padding: 14px 24px;
 """)
 
@@ -300,7 +286,7 @@ def nav_buttons() -> list:
 
 def conversion_page_content(state: State) -> list:
     """Build the converter page content."""
-    content = [Header("Number Systems Lab"), "[ MODULE 01 : CONVERTER ]"]
+    content = [Header("Number Systems Lab"), "Converter"]
     content.extend(nav_buttons())
     content.extend([
         Header("Input", 2),
@@ -430,7 +416,7 @@ def convert_number(state: State, number_text: str, input_base: str) -> Page:
 @route
 def history(state: State) -> Page:
     """Show every successful conversion saved during this session."""
-    content = [Header("Number Systems Lab"), "[ MODULE 03 : SESSION LOG ]"]
+    content = [Header("Number Systems Lab"), "History"]
     content.extend(nav_buttons())
     content.extend([
         Button("Clear History", "clear_history"),
@@ -463,7 +449,7 @@ def clear_history(state: State) -> Page:
 @route
 def learn(state: State) -> Page:
     """Teach the repeated-division and positional methods."""
-    content = [Header("Number Systems Lab"), "[ MODULE 02 : REFERENCE ]"]
+    content = [Header("Number Systems Lab"), "Learn"]
     content.extend(nav_buttons())
     content.extend([
         "Understand the algorithms instead of only getting an answer.",
@@ -512,7 +498,7 @@ def learn(state: State) -> Page:
 @route
 def practice(state: State) -> Page:
     """Show the current practice problem."""
-    content = [Header("Number Systems Lab"), "[ MODULE 04 : DRILL ]"]
+    content = [Header("Number Systems Lab"), "Practice"]
     content.extend(nav_buttons())
     content.extend([
         Header("Challenge", 2),
