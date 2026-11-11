@@ -2,6 +2,55 @@ from drafter import *
 from dataclasses import dataclass
 
 
+# Use a colorful built-in theme and a few simple custom styles to make the
+# learning pages easier to read and more visually engaging.
+set_website_style("pico")
+add_website_css("#drafter-body--", """
+    background: linear-gradient(135deg, #eef6ff 0%, #f8f1ff 50%, #fff7ed 100%);
+    min-height: 100vh;
+    padding-bottom: 40px;
+""")
+add_website_css("#drafter-body-- h1", """
+    color: #4f46e5;
+    font-weight: 800;
+    letter-spacing: 1px;
+""")
+add_website_css("#drafter-body-- h2", """
+    color: #0f766e;
+    font-weight: 750;
+""")
+add_website_css("#drafter-body-- button", """
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.20);
+    margin: 4px;
+""")
+add_website_css("#drafter-body-- button:hover", """
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    transform: translateY(-1px);
+""")
+add_website_css("#drafter-body-- input, #drafter-body-- select", """
+    border: 2px solid #c4b5fd;
+    border-radius: 9px;
+    background-color: white;
+""")
+add_website_css("#drafter-body-- input:focus, #drafter-body-- select:focus", """
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+""")
+add_website_css("#drafter-body-- ul", """
+    background-color: rgba(255, 255, 255, 0.82);
+    border-left: 5px solid #8b5cf6;
+    border-radius: 10px;
+    padding: 14px 24px;
+""")
+add_website_css("#drafter-body-- p", """
+    line-height: 1.6;
+""")
+
+
 @dataclass
 class Conversion:
     """Store the important values from one successful conversion."""
@@ -452,6 +501,7 @@ assert_has(new_practice(State("", 10, "", 0, [], 25)), "Convert this decimal num
 assert_has(check_answer(State("", 10, "", 0, [], 25), "11001"), "correct")
 
 set_website_title("Number Systems Lab")
+set_page_transition("fade", 0.25)
 set_site_information(
     author="Soumil Ghosh",
     description=(
