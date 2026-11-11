@@ -1,15 +1,9 @@
-from bakery import assert_equal
 from drafter import *
 from dataclasses import dataclass
 
-
-
-hide_debug_information()
-set_website_title("Your Drafter Website")
+hide_debug_information() 
+set_website_title("Number System") 
 set_website_framed(False)
-
-
-
 @dataclass
 class Conversion:
     """Store the important values from one successful conversion."""
@@ -101,37 +95,53 @@ def base_name(base: int) -> str:
 def conversion_page_content(state: State) -> list:
     """Build the converter page content."""
     content = [
-        Header("Number Converter"),
-        "Convert a number between decimal, binary, and hexadecimal.",
+        Header("🔢 NUMBER SYSTEMS LAB"),
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "Convert numbers and learn how decimal, binary, and hexadecimal work.",
         "\n",
-        Button("Home", "home"),
-        Button("Learn", "learn"),
-        Button("History", "history"),
-        Button("Practice", "practice"),
-        "\n\n",
-        "Enter a number:",
+        Button("🏠 Home", "home"),
+        Button("📖 Learn", "learn"),
+        Button("📜 History", "history"),
+        Button("🎯 Practice", "practice"),
+        "\n",
+        Header("CONVERTER"),
+        "Enter a number below, choose its original number system, and convert it.",
+        "\n",
+        "NUMBER",
         TextBox("number_text", state.current_input),
         "\n",
-        "Original number system:",
+        "ORIGINAL NUMBER SYSTEM",
         SelectBox(
             "input_base",
             ["Decimal", "Binary", "Hexadecimal"],
             base_name(state.input_base)
         ),
         "\n",
-        Button("Convert Number", "convert_number"),
+        Button("✨ Convert Number", "convert_number"),
         "\n",
     ]
 
     if state.error_message != "":
-        content.append("Error: " + state.error_message)
+        content.extend([
+            Header("⚠️ CHECK YOUR INPUT"),
+            state.error_message,
+            "\n",
+        ])
     elif state.current_input != "":
         binary_text = decimal_to_binary(state.decimal_result)
         hex_text = decimal_to_hexadecimal(state.decimal_result)
         content.extend([
-            "Decimal: " + str(state.decimal_result) + "\n",
-            "Binary: " + binary_text + "\n",
-            "Hexadecimal: " + hex_text + "\n"
+            Header("✅ CONVERSION RESULT"),
+            "Decimal",
+            str(state.decimal_result),
+            "\n",
+            "Binary",
+            binary_text,
+            "\n",
+            "Hexadecimal",
+            hex_text,
+            "\n",
+            "Your number has been saved to your conversion history.",
         ])
 
     return content
@@ -147,16 +157,27 @@ def index(state: State) -> Page:
 def home(state: State) -> Page:
     """Show the purpose of the website and its main navigation."""
     return Page(state, [
-        Header("Number Systems Lab"),
-        "Learn how decimal, binary, and hexadecimal number systems work.",
+        Header("🔢 NUMBER SYSTEMS LAB"),
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "Learn • Convert • Practice",
         "\n",
-        "Use the converter to change numbers between systems, "
-        "review your conversion history, or practice what you learned.",
-        "\n\n",
-        Button("Open Converter", "converter"),
-        Button("Learn Conversions", "learn"),
-        Button("View History", "history"),
-        Button("Practice", "practice"),
+        "A simple interactive lab for learning decimal, binary, and hexadecimal.",
+        "Convert numbers, see the results instantly, and practice your skills.",
+        "\n",
+        Header("WHAT DO YOU WANT TO DO?"),
+        "Convert a number",
+        Button("✨ Open Converter", "converter"),
+        "\n",
+        "Learn how conversions work",
+        Button("📖 Learn Conversions", "learn"),
+        "\n",
+        "Review your previous answers",
+        Button("📜 View History", "history"),
+        "\n",
+        "Test what you know",
+        Button("🎯 Start Practice", "practice"),
+        "\n",
+        "TIP: Start with Learn if you are new to number systems.",
     ])
 
 
@@ -209,25 +230,31 @@ def convert_number(state: State, number_text: str, input_base: str) -> Page:
 def history(state: State) -> Page:
     """Show every successful conversion saved during this session."""
     content = [
-        Header("Conversion History"),
-        Button("Home", "home"),
-        Button("Converter", "converter"),
-        Button("Clear History", "clear_history"),
-        "\n\n"
+        Header("📜 CONVERSION HISTORY"),
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "Your successful conversions from this session.",
+        "\n",
+        Button("🏠 Home", "home"),
+        Button("✨ Converter", "converter"),
+        Button("🗑 Clear History", "clear_history"),
+        "\n\n",
     ]
 
     if len(state.conversion_history) == 0:
-        content.append("No conversions have been completed yet.")
+        content.extend([
+            Header("YOUR HISTORY IS EMPTY"),
+            "Complete a conversion to see it appear here.",
+        ])
     else:
-        content.append("Previous conversions:\n")
+        content.append(Header("SAVED CONVERSIONS"))
         history_lines = []
 
         for conversion in state.conversion_history:
             history_lines.append(
                 conversion.original_number
-                + " → Decimal: " + str(conversion.decimal_system)
-                + " | Binary: " + conversion.binary_value
-                + " | Hexadecimal: " + conversion.hexadecimal_value
+                + "  →  Decimal: " + str(conversion.decimal_system)
+                + "  |  Binary: " + conversion.binary_value
+                + "  |  Hex: " + conversion.hexadecimal_value
             )
 
         content.append(BulletedList(history_lines))
@@ -247,47 +274,57 @@ def clear_history(state: State) -> Page:
 def learn(state: State) -> Page:
     """Teach the basic repeated-division method for each number system."""
     return Page(state, [
-        Header("Learn Number Systems"),
-        Button("Home", "home"),
-        Button("Converter", "converter"),
-        Button("Practice", "practice"),
-        "\n\n",
-        Header("Decimal → Binary"),
+        Header("📖 LEARN NUMBER SYSTEMS"),
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "Learn the ideas behind the conversions instead of only getting an answer.",
+        "\n",
+        Button("🏠 Home", "home"),
+        Button("✨ Converter", "converter"),
+        Button("🎯 Practice", "practice"),
+        "\n",
+        Header("DECIMAL → BINARY"),
+        "Binary uses only 0 and 1.",
         "1. Divide the decimal number by 2.",
         "2. Record the remainder.",
-        "3. Keep dividing the quotient by 2.",
-        "4. Read the remainders from bottom to top.",
+        "3. Divide the quotient by 2 again.",
+        "4. Repeat until the quotient is 0.",
+        "5. Read the remainders from bottom to top.",
         "\n",
-        Header("Decimal → Hexadecimal"),
+        Header("DECIMAL → HEXADECIMAL"),
+        "Hexadecimal uses 0-9 and A-F.",
         "1. Divide the decimal number by 16.",
         "2. Record the remainder.",
         "3. Use A-F for remainders 10-15.",
-        "4. Read the remainders from bottom to top.",
+        "4. Repeat until the quotient is 0.",
+        "5. Read the remainders from bottom to top.",
         "\n",
-        Header("Binary and Hexadecimal"),
-        "Binary uses only 0 and 1. Hexadecimal uses 0-9 and A-F.",
+        Header("💡 QUICK FACT"),
         "Four binary digits represent one hexadecimal digit.",
+        "That is why binary and hexadecimal can be converted between so easily.",
     ])
 
 
 @route
 def practice(state: State) -> Page:
     """Show the current practice problem."""
-
     return Page(state, [
-        Header("Practice"),
-        Button("Home", "home"),
-        Button("Converter", "converter"),
-        Button("Learn", "learn"),
-        "\n\n",
+        Header("🎯 PRACTICE MODE"),
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "Test yourself without looking at the converter first.",
+        "\n",
+        Button("🏠 Home", "home"),
+        Button("📖 Learn", "learn"),
+        Button("✨ Converter", "converter"),
+        "\n",
+        Header("YOUR CHALLENGE"),
         "Convert this decimal number to binary:",
         "\n",
-        str(state.practice_number),
-        "\n\n",
-        "Your answer:",
+        "⭐ " + str(state.practice_number) + " ⭐",
+        "\n",
+        "YOUR ANSWER",
         TextBox("practice_answer"),
         "\n",
-        Button("Check Answer", "check_answer"),
+        Button("✓ Check Answer", "check_answer"),
     ])
 
 
@@ -308,24 +345,25 @@ def check_answer(state: State, practice_answer: str) -> Page:
     if state.current_input == correct_answer:
         state.error_message = ""
         return Page(state, [
-            Header("Correct!"),
-            "Your answer " + state.current_input + " is correct.",
+            Header("🎉 CORRECT!"),
+            "Your answer " + state.current_input + " is correct!",
+            "You converted " + str(state.practice_number) + " successfully.",
             "\n",
-            Button("Try Another", "new_practice"),
-            Button("Converter", "converter"),
-            Button("Home", "home"),
+            Button("➡ Try Another", "new_practice"),
+            Button("✨ Converter", "converter"),
+            Button("🏠 Home", "home"),
         ])
 
     state.error_message = "The correct answer is " + correct_answer + "."
     return Page(state, [
-        Header("Keep Practicing"),
+        Header("💪 KEEP PRACTICING"),
         "Your answer was " + state.current_input + ".",
         "\n",
         state.error_message,
         "\n\n",
-        Button("Try Again", "practice"),
-        Button("Learn", "learn"),
-        Button("Home", "home"),
+        Button("↻ Try Again", "practice"),
+        Button("📖 Review the Lesson", "learn"),
+        Button("🏠 Home", "home"),
     ])
 
 
@@ -438,5 +476,4 @@ start_server(
         practice_number=25
     )
 )
-
 
