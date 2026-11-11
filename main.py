@@ -364,7 +364,7 @@ def index(state: State) -> Page:
 @route
 def home(state: State) -> Page:
     """Show the purpose of the website and its main navigation."""
-    content = [Header("Number Systems Lab"), "[ SYSTEM ONLINE ]  radix toolkit v1.0"]
+    content = [Header("Number Systems Lab")]
     content.extend(nav_buttons())
     content.extend([
         "Convert between decimal, binary, and hexadecimal. See every division",
@@ -377,20 +377,7 @@ def home(state: State) -> Page:
             " 10   decimal       0-9                  -\n"
             " 16   hexadecimal   0-9 A-F              0x"
         ),
-        Header("Modules", 2),
-        "01  Convert a value and view the full trace",
-        Button("Open Converter", "converter"),
-        "\n",
-        "02  Study the algorithms and place-value tables",
-        Button("Learn Conversions", "learn"),
-        "\n",
-        "03  Review earlier conversions from this session",
-        Button("View History", "history"),
-        "\n",
-        "04  Test yourself with generated problems",
-        Button("Start Practice", "practice"),
-        "\n",
-        "TIP: new to number systems? Start with module 02.",
+        "TIP: new to number systems? Start with the Learn page.",
     ])
     return Page(state, content)
 
@@ -650,8 +637,8 @@ new_practice(new_question_state)
 assert_equal(new_question_state.practice_number, 32)
 
 # At least one test for each route.
-assert_has(index(State("", 10, "", 0, [], 25)), Button("Open Converter", "converter"))
-assert_has(home(State("", 10, "", 0, [], 25)), Button("Learn Conversions", "learn"))
+assert_has(index(State("", 10, "", 0, [], 25)), Button("Converter", "converter"))
+assert_has(home(State("", 10, "", 0, [], 25)), Button("Learn", "learn"))
 assert_has(converter(State("", 10, "", 0, [], 25)), TextBox("number_text", ""))
 
 assert_state(
