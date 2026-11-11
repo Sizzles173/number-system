@@ -2,55 +2,111 @@ from drafter import *
 from dataclasses import dataclass
 
 
-# Use a colorful built-in theme and a few simple custom styles to make the
-# learning pages easier to read and more visually engaging.
+# ---------------------------------------------------------------------------
+# THEME: dark "engineering console" look with a faint blueprint grid,
+# monospace type, cyan/green accents, and terminal-style output panels.
+# ---------------------------------------------------------------------------
 set_website_style("pico")
+
+MONO = "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Courier New', monospace"
+
 add_website_css("#drafter-body--", """
-    background: linear-gradient(135deg, #eef6ff 0%, #f8f1ff 50%, #fff7ed 100%);
+    background-color: #070b14;
+    background-image:
+        linear-gradient(rgba(34, 211, 238, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 211, 238, 0.045) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: #cbd5e1;
+    font-family: """ + MONO + """;
     min-height: 100vh;
-    padding-bottom: 40px;
+    padding: 24px 24px 56px 24px;
 """)
 add_website_css("#drafter-body-- h1", """
-    color: #4f46e5;
+    color: #22d3ee;
+    font-family: """ + MONO + """;
     font-weight: 800;
-    letter-spacing: 1px;
+    font-size: 1.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border-bottom: 1px solid #155e75;
+    padding-bottom: 10px;
+    text-shadow: 0 0 14px rgba(34, 211, 238, 0.45);
 """)
 add_website_css("#drafter-body-- h2", """
-    color: #0f766e;
-    font-weight: 750;
+    color: #4ade80;
+    font-family: """ + MONO + """;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 28px;
+""")
+add_website_css("#drafter-body-- h2::before", """
+    content: "// ";
+    color: #475569;
+""")
+add_website_css("#drafter-body-- p, #drafter-body-- li", """
+    color: #cbd5e1;
+    font-family: """ + MONO + """;
+    font-size: 0.93rem;
+    line-height: 1.7;
+""")
+add_website_css("#drafter-body-- pre", """
+    background: #020617;
+    color: #86efac;
+    font-family: """ + MONO + """;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    border: 1px solid #164e63;
+    border-left: 4px solid #22d3ee;
+    border-radius: 6px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.07) inset;
 """)
 add_website_css("#drafter-body-- button", """
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.20);
-    margin: 4px;
+    background: rgba(34, 211, 238, 0.06);
+    color: #22d3ee;
+    border: 1px solid #22d3ee;
+    border-radius: 4px;
+    font-family: """ + MONO + """;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 8px 16px;
+    margin: 4px 6px 4px 0;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.15);
+    transition: all 0.15s ease;
 """)
 add_website_css("#drafter-body-- button:hover", """
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    transform: translateY(-1px);
+    background: #22d3ee;
+    color: #020617;
+    box-shadow: 0 0 18px rgba(34, 211, 238, 0.6);
 """)
 add_website_css("#drafter-body-- input, #drafter-body-- select", """
-    border: 2px solid #c4b5fd;
-    border-radius: 9px;
-    background-color: white;
+    background-color: #0f172a;
+    color: #e2e8f0;
+    font-family: """ + MONO + """;
+    border: 1px solid #334155;
+    border-radius: 4px;
 """)
 add_website_css("#drafter-body-- input:focus, #drafter-body-- select:focus", """
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
 """)
 add_website_css("#drafter-body-- ul", """
-    background-color: rgba(255, 255, 255, 0.82);
-    border-left: 5px solid #8b5cf6;
-    border-radius: 10px;
+    background-color: rgba(15, 23, 42, 0.85);
+    border: 1px solid #1e293b;
+    border-left: 4px solid #4ade80;
+    border-radius: 6px;
     padding: 14px 24px;
 """)
-add_website_css("#drafter-body-- p", """
-    line-height: 1.6;
-""")
 
 
+# ---------------------------------------------------------------------------
+# DATA
+# ---------------------------------------------------------------------------
 @dataclass
 class Conversion:
     """Store the important values from one successful conversion."""
@@ -71,6 +127,9 @@ class State:
     practice_number: int
 
 
+# ---------------------------------------------------------------------------
+# HELPER FUNCTIONS
+# ---------------------------------------------------------------------------
 def decimal_to_binary(number: int) -> str:
     """Convert a non-negative decimal integer to a binary string."""
     if number == 0:
@@ -114,18 +173,20 @@ def is_valid_number(number: str, base: int) -> bool:
     return True
 
 
+def digit_value(digit: str) -> int:
+    """Return the numeric value of one digit character (0-9, A-F)."""
+    if digit.isdigit():
+        return int(digit)
+    return ord(digit.upper()) - ord("A") + 10
+
+
 def convert_to_decimal(number: str, base: int) -> int:
     """Convert a valid binary, decimal, or hexadecimal string to decimal."""
     number = number.upper()
     decimal_number = 0
 
     for digit in number:
-        if digit.isdigit():
-            digit_value = int(digit)
-        else:
-            digit_value = ord(digit) - ord("A") + 10
-
-        decimal_number = decimal_number * base + digit_value
+        decimal_number = decimal_number * base + digit_value(digit)
 
     return decimal_number
 
@@ -139,61 +200,161 @@ def base_name(base: int) -> str:
     return "Decimal"
 
 
+def group_bits(binary: str) -> str:
+    """Left-pad a binary string to a multiple of 4 and group it in nibbles."""
+    padding = (4 - len(binary) % 4) % 4
+    padded = "0" * padding + binary
+    groups = []
+
+    for start in range(0, len(padded), 4):
+        groups.append(padded[start:start + 4])
+
+    return " ".join(groups)
+
+
+def division_steps(number: int, base: int) -> str:
+    """Return a repeated-division trace as aligned monospace text."""
+    digits = "0123456789ABCDEF"
+
+    if number == 0:
+        return "0 / " + str(base) + " = 0   remainder 0   ->  0"
+
+    lines = []
+    while number > 0:
+        quotient = number // base
+        remainder = number % base
+        lines.append(
+            str(number).rjust(8) + " / " + str(base).ljust(2)
+            + " = " + str(quotient).rjust(8)
+            + "   remainder " + str(remainder).rjust(2)
+            + "   ->  " + digits[remainder]
+        )
+        number = quotient
+
+    return "\n".join(lines)
+
+
+def expansion(number: str, base: int) -> str:
+    """Return the positional expansion of a number, e.g. 'F x 16^1 + ...'."""
+    number = number.upper()
+    terms = []
+    length = len(number)
+
+    for index in range(length):
+        power = length - index - 1
+        terms.append(
+            str(digit_value(number[index])) + "*" + str(base) + "^" + str(power)
+        )
+
+    return " + ".join(terms)
+
+
+def result_report(state: State) -> str:
+    """Build the terminal-style result block for the current conversion."""
+    binary_text = decimal_to_binary(state.decimal_result)
+    hex_text = decimal_to_hexadecimal(state.decimal_result)
+
+    lines = [
+        "INPUT        : " + state.current_input + "  (base " + str(state.input_base) + ")",
+        "DECIMAL      : " + str(state.decimal_result),
+        "BINARY       : 0b" + group_bits(binary_text),
+        "HEXADECIMAL  : 0x" + hex_text,
+        "BIT LENGTH   : " + str(len(binary_text)) + " bit(s)",
+        "BYTES NEEDED : " + str((len(binary_text) + 7) // 8),
+    ]
+    return "\n".join(lines)
+
+
+def history_table(conversions: list[Conversion]) -> str:
+    """Format saved conversions as an aligned text table."""
+    lines = [
+        "#".ljust(4) + "INPUT".ljust(14) + "DECIMAL".ljust(12)
+        + "BINARY".ljust(24) + "HEX",
+        "-" * 62,
+    ]
+
+    for index in range(len(conversions)):
+        conversion = conversions[index]
+        lines.append(
+            str(index + 1).ljust(4)
+            + conversion.original_number.ljust(14)
+            + str(conversion.decimal_system).ljust(12)
+            + group_bits(conversion.binary_value).ljust(24)
+            + "0x" + conversion.hexadecimal_value
+        )
+
+    return "\n".join(lines)
+
+
+def nav_buttons() -> list:
+    """Return the navigation bar shown at the top of every page."""
+    return [
+        Button("Home", "home"),
+        Button("Converter", "converter"),
+        Button("Learn", "learn"),
+        Button("Practice", "practice"),
+        Button("History", "history"),
+        "\n",
+    ]
+
+
 def conversion_page_content(state: State) -> list:
     """Build the converter page content."""
-    content = [
-        Header("🔢 NUMBER SYSTEMS LAB"),
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        "Convert numbers and learn how decimal, binary, and hexadecimal work.",
+    content = [Header("Number Systems Lab"), "[ MODULE 01 : CONVERTER ]"]
+    content.extend(nav_buttons())
+    content.extend([
+        Header("Input", 2),
+        "Enter a value, select its radix, and run the conversion.",
         "\n",
-        Button("🏠 Home", "home"),
-        Button("📖 Learn", "learn"),
-        Button("📜 History", "history"),
-        Button("🎯 Practice", "practice"),
-        "\n",
-        Header("CONVERTER"),
-        "Enter a number below, choose its original number system, and convert it.",
-        "\n",
-        "NUMBER",
+        "VALUE",
         TextBox("number_text", state.current_input),
         "\n",
-        "ORIGINAL NUMBER SYSTEM",
+        "RADIX",
         SelectBox(
             "input_base",
             ["Decimal", "Binary", "Hexadecimal"],
             base_name(state.input_base)
         ),
         "\n",
-        Button("✨ Convert Number", "convert_number"),
+        Button("Convert Number", "convert_number"),
         "\n",
-    ]
+    ])
 
     if state.error_message != "":
         content.extend([
-            Header("⚠️ CHECK YOUR INPUT"),
-            state.error_message,
-            "\n",
+            Header("Error", 2),
+            PreformattedText("ERR  invalid input\n" + state.error_message),
         ])
     elif state.current_input != "":
         binary_text = decimal_to_binary(state.decimal_result)
-        hex_text = decimal_to_hexadecimal(state.decimal_result)
         content.extend([
-            Header("✅ CONVERSION RESULT"),
-            "Decimal",
-            str(state.decimal_result),
-            "\n",
-            "Binary",
-            binary_text,
-            "\n",
-            "Hexadecimal",
-            hex_text,
-            "\n",
-            "Your number has been saved to your conversion history.",
+            Header("Output", 2),
+            PreformattedText(result_report(state)),
+            Header("Binary Division Trace (base 2)", 2),
+            PreformattedText(division_steps(state.decimal_result, 2)),
+            "Read the remainders from the bottom up: " + binary_text,
+            Header("Hex Division Trace (base 16)", 2),
+            PreformattedText(division_steps(state.decimal_result, 16)),
         ])
+
+        if state.input_base != 10:
+            content.extend([
+                Header("Positional Expansion", 2),
+                PreformattedText(
+                    state.current_input + " (base " + str(state.input_base)
+                    + ") = " + expansion(state.current_input, state.input_base)
+                    + " = " + str(state.decimal_result)
+                ),
+            ])
+
+        content.append("Result logged to session history.")
 
     return content
 
 
+# ---------------------------------------------------------------------------
+# ROUTES
+# ---------------------------------------------------------------------------
 @route
 def index(state: State) -> Page:
     """Build the front page of the website."""
@@ -203,29 +364,35 @@ def index(state: State) -> Page:
 @route
 def home(state: State) -> Page:
     """Show the purpose of the website and its main navigation."""
-    return Page(state, [
-        Header("🔢 NUMBER SYSTEMS LAB"),
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        "Learn • Convert • Practice",
+    content = [Header("Number Systems Lab"), "[ SYSTEM ONLINE ]  radix toolkit v1.0"]
+    content.extend(nav_buttons())
+    content.extend([
+        "Convert between decimal, binary, and hexadecimal. See every division",
+        "step, inspect bit patterns, and drill your skills.",
+        Header("Supported Radices", 2),
+        PreformattedText(
+            "BASE  NAME          SYMBOLS              PREFIX\n"
+            "----  ------------  -------------------  ------\n"
+            "  2   binary        0 1                  0b\n"
+            " 10   decimal       0-9                  -\n"
+            " 16   hexadecimal   0-9 A-F              0x"
+        ),
+        Header("Modules", 2),
+        "01  Convert a value and view the full trace",
+        Button("Open Converter", "converter"),
         "\n",
-        "A simple interactive lab for learning decimal, binary, and hexadecimal.",
-        "Convert numbers, see the results instantly, and practice your skills.",
+        "02  Study the algorithms and place-value tables",
+        Button("Learn Conversions", "learn"),
         "\n",
-        Header("WHAT DO YOU WANT TO DO?"),
-        "Convert a number",
-        Button("✨ Open Converter", "converter"),
+        "03  Review earlier conversions from this session",
+        Button("View History", "history"),
         "\n",
-        "Learn how conversions work",
-        Button("📖 Learn Conversions", "learn"),
+        "04  Test yourself with generated problems",
+        Button("Start Practice", "practice"),
         "\n",
-        "Review your previous answers",
-        Button("📜 View History", "history"),
-        "\n",
-        "Test what you know",
-        Button("🎯 Start Practice", "practice"),
-        "\n",
-        "TIP: Start with Learn if you are new to number systems.",
+        "TIP: new to number systems? Start with module 02.",
     ])
+    return Page(state, content)
 
 
 @route
@@ -276,35 +443,24 @@ def convert_number(state: State, number_text: str, input_base: str) -> Page:
 @route
 def history(state: State) -> Page:
     """Show every successful conversion saved during this session."""
-    content = [
-        Header("📜 CONVERSION HISTORY"),
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        "Your successful conversions from this session.",
+    content = [Header("Number Systems Lab"), "[ MODULE 03 : SESSION LOG ]"]
+    content.extend(nav_buttons())
+    content.extend([
+        Button("Clear History", "clear_history"),
         "\n",
-        Button("🏠 Home", "home"),
-        Button("✨ Converter", "converter"),
-        Button("🗑 Clear History", "clear_history"),
-        "\n\n",
-    ]
+    ])
 
     if len(state.conversion_history) == 0:
         content.extend([
-            Header("YOUR HISTORY IS EMPTY"),
-            "Complete a conversion to see it appear here.",
+            Header("Log Empty", 2),
+            PreformattedText("No conversions recorded yet.\nRun the converter to add entries."),
         ])
     else:
-        content.append(Header("SAVED CONVERSIONS"))
-        history_lines = []
-
-        for conversion in state.conversion_history:
-            history_lines.append(
-                conversion.original_number
-                + "  →  Decimal: " + str(conversion.decimal_system)
-                + "  |  Binary: " + conversion.binary_value
-                + "  |  Hex: " + conversion.hexadecimal_value
-            )
-
-        content.append(BulletedList(history_lines))
+        content.extend([
+            Header("Saved Conversions", 2),
+            PreformattedText(history_table(state.conversion_history)),
+            "Entries logged: " + str(len(state.conversion_history)),
+        ])
 
     return Page(state, content)
 
@@ -319,60 +475,71 @@ def clear_history(state: State) -> Page:
 
 @route
 def learn(state: State) -> Page:
-    """Teach the basic repeated-division method for each number system."""
-    return Page(state, [
-        Header("📖 LEARN NUMBER SYSTEMS"),
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        "Learn the ideas behind the conversions instead of only getting an answer.",
-        "\n",
-        Button("🏠 Home", "home"),
-        Button("✨ Converter", "converter"),
-        Button("🎯 Practice", "practice"),
-        "\n",
-        Header("DECIMAL → BINARY"),
-        "Binary uses only 0 and 1.",
+    """Teach the repeated-division and positional methods."""
+    content = [Header("Number Systems Lab"), "[ MODULE 02 : REFERENCE ]"]
+    content.extend(nav_buttons())
+    content.extend([
+        "Understand the algorithms instead of only getting an answer.",
+        Header("Place Values (Binary)", 2),
+        PreformattedText(
+            "BIT POSITION :   7    6    5    4    3    2    1    0\n"
+            "WEIGHT (2^n) : 128   64   32   16    8    4    2    1"
+        ),
+        "Each bit is worth a power of two. Add the weights where the bit is 1.",
+        Header("Decimal → Binary", 2),
         "1. Divide the decimal number by 2.",
-        "2. Record the remainder.",
+        "2. Record the remainder (0 or 1).",
         "3. Divide the quotient by 2 again.",
         "4. Repeat until the quotient is 0.",
         "5. Read the remainders from bottom to top.",
-        "\n",
-        Header("DECIMAL → HEXADECIMAL"),
-        "Hexadecimal uses 0-9 and A-F.",
+        "Worked example: 25",
+        PreformattedText(division_steps(25, 2) + "\n\nread upward: 11001"),
+        Header("Decimal → Hexadecimal", 2),
         "1. Divide the decimal number by 16.",
         "2. Record the remainder.",
         "3. Use A-F for remainders 10-15.",
         "4. Repeat until the quotient is 0.",
         "5. Read the remainders from bottom to top.",
-        "\n",
-        Header("💡 QUICK FACT"),
-        "Four binary digits represent one hexadecimal digit.",
-        "That is why binary and hexadecimal can be converted between so easily.",
+        "Worked example: 255",
+        PreformattedText(division_steps(255, 16) + "\n\nread upward: FF"),
+        Header("Any Base → Decimal", 2),
+        "Multiply each digit by the base raised to its position, then add.",
+        PreformattedText(
+            "1011 (base 2)  = " + expansion("1011", 2) + " = " + str(convert_to_decimal("1011", 2)) + "\n"
+            "2F   (base 16) = " + expansion("2F", 16) + " = " + str(convert_to_decimal("2F", 16))
+        ),
+        Header("Nibble Lookup Table", 2),
+        PreformattedText(
+            "HEX  BIN     HEX  BIN     HEX  BIN     HEX  BIN\n"
+            " 0   0000     4   0100     8   1000     C   1100\n"
+            " 1   0001     5   0101     9   1001     D   1101\n"
+            " 2   0010     6   0110     A   1010     E   1110\n"
+            " 3   0011     7   0111     B   1011     F   1111"
+        ),
+        "Four binary digits map to exactly one hexadecimal digit, so binary",
+        "and hex convert to each other by grouping bits in fours.",
     ])
+    return Page(state, content)
 
 
 @route
 def practice(state: State) -> Page:
     """Show the current practice problem."""
-    return Page(state, [
-        Header("🎯 PRACTICE MODE"),
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-        "Test yourself without looking at the converter first.",
-        "\n",
-        Button("🏠 Home", "home"),
-        Button("📖 Learn", "learn"),
-        Button("✨ Converter", "converter"),
-        "\n",
-        Header("YOUR CHALLENGE"),
+    content = [Header("Number Systems Lab"), "[ MODULE 04 : DRILL ]"]
+    content.extend(nav_buttons())
+    content.extend([
+        Header("Challenge", 2),
         "Convert this decimal number to binary:",
-        "\n",
-        "⭐ " + str(state.practice_number) + " ⭐",
-        "\n",
-        "YOUR ANSWER",
+        PreformattedText(">>> " + str(state.practice_number)),
+        PreformattedText(
+            "WEIGHT (2^n) : 128   64   32   16    8    4    2    1"
+        ),
+        "ANSWER",
         TextBox("practice_answer"),
         "\n",
-        Button("✓ Check Answer", "check_answer"),
+        Button("Check Answer", "check_answer"),
     ])
+    return Page(state, content)
 
 
 @route
@@ -384,36 +551,44 @@ def new_practice(state: State) -> Page:
 
 @route
 def check_answer(state: State, practice_answer: str) -> Page:
-    """Check the user's practice answer and update the feedback."""
+    """Check the user's practice answer and show feedback."""
     correct_answer = decimal_to_binary(state.practice_number)
+    submitted = practice_answer.strip().upper()
 
-    state.current_input = practice_answer.strip().upper()
-
-    if state.current_input == correct_answer:
-        state.error_message = ""
+    if submitted == correct_answer:
         return Page(state, [
-            Header("🎉 CORRECT!"),
-            "Your answer " + state.current_input + " is correct!",
-            "You converted " + str(state.practice_number) + " successfully.",
+            Header("Correct"),
+            PreformattedText(
+                "STATUS  : PASS\n"
+                "INPUT   : " + str(state.practice_number) + "\n"
+                "ANSWER  : " + submitted
+            ),
+            "Your answer " + submitted + " is correct!",
             "\n",
-            Button("➡ Try Another", "new_practice"),
-            Button("✨ Converter", "converter"),
-            Button("🏠 Home", "home"),
+            Button("Try Another", "new_practice"),
+            Button("Converter", "converter"),
+            Button("Home", "home"),
         ])
 
-    state.error_message = "The correct answer is " + correct_answer + "."
     return Page(state, [
-        Header("💪 KEEP PRACTICING"),
-        "Your answer was " + state.current_input + ".",
+        Header("Keep Practicing"),
+        PreformattedText(
+            "STATUS    : FAIL\n"
+            "YOUR ANS  : " + submitted + "\n"
+            "EXPECTED  : " + correct_answer + "\n\n"
+            + division_steps(state.practice_number, 2)
+        ),
+        "Compare your remainders with the trace above.",
         "\n",
-        state.error_message,
-        "\n\n",
-        Button("↻ Try Again", "practice"),
-        Button("📖 Review the Lesson", "learn"),
-        Button("🏠 Home", "home"),
+        Button("Try Again", "practice"),
+        Button("Review the Lesson", "learn"),
+        Button("Home", "home"),
     ])
 
 
+# ---------------------------------------------------------------------------
+# TESTS
+# ---------------------------------------------------------------------------
 # Unit tests for helper functions.
 assert_equal(decimal_to_binary(0), "0")
 assert_equal(decimal_to_binary(10), "1010")
@@ -424,15 +599,27 @@ assert_equal(is_valid_number("10101", 2), True)
 assert_equal(is_valid_number("10201", 2), False)
 
 # Additional edge-case and validation tests.
-assert_equal(decimal_to_binary(0), "0")
 assert_equal(decimal_to_hexadecimal(0), "0")
 assert_equal(decimal_to_hexadecimal(10), "A")
 assert_equal(decimal_to_hexadecimal(15), "F")
 assert_equal(decimal_to_hexadecimal(16), "10")
-assert_equal(decimal_to_hexadecimal(255), "FF")
 assert_equal(is_valid_number("FF", 16), True)
 assert_equal(is_valid_number("G5", 16), False)
 assert_equal(is_valid_number("102", 2), False)
+assert_equal(is_valid_number("", 10), False)
+
+# Tests for the new technical helpers.
+assert_equal(digit_value("7"), 7)
+assert_equal(digit_value("F"), 15)
+assert_equal(group_bits("1"), "0001")
+assert_equal(group_bits("11001"), "0001 1001")
+assert_equal(group_bits("11111111"), "1111 1111")
+assert_equal(expansion("1011", 2), "1*2^3 + 0*2^2 + 1*2^1 + 1*2^0")
+assert_equal(base_name(2), "Binary")
+assert_equal(base_name(10), "Decimal")
+assert_equal(base_name(16), "Hexadecimal")
+assert_equal(division_steps(0, 2), "0 / 2 = 0   remainder 0   ->  0")
+assert_equal(len(division_steps(25, 2).split("\n")), 5)
 
 hex_result = convert_number(
     State("", 10, "", 0, [], 25),
@@ -500,6 +687,10 @@ assert_has(practice(State("", 10, "", 0, [], 25)), "Convert this decimal number 
 assert_has(new_practice(State("", 10, "", 0, [], 25)), "Convert this decimal number to binary:")
 assert_has(check_answer(State("", 10, "", 0, [], 25), "11001"), "correct")
 
+
+# ---------------------------------------------------------------------------
+# SITE SETTINGS
+# ---------------------------------------------------------------------------
 set_website_title("Number Systems Lab")
 set_page_transition("fade", 0.25)
 set_site_information(
@@ -524,4 +715,3 @@ start_server(
         practice_number=25
     )
 )
-
