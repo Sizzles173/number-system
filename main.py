@@ -130,7 +130,14 @@ class State:
 # HELPER FUNCTIONS
 # ---------------------------------------------------------------------------
 def decimal_to_binary(number: int) -> str:
-    """Convert a non-negative decimal integer to a binary string."""
+    """Convert a non-negative decimal integer to a binary string.
+
+    Args:
+        number: The decimal integer to convert.
+
+    Returns:
+        The binary representation of the number as a string.
+"""
     if number == 0:
         return "0"
 
@@ -143,7 +150,14 @@ def decimal_to_binary(number: int) -> str:
 
 
 def decimal_to_hexadecimal(number: int) -> str:
-    """Convert a non-negative decimal integer to a hexadecimal string."""
+    """Convert a non-negative decimal integer to a hexadecimal string.
+
+    Args:
+        number: The decimal integer to convert.
+
+    Returns:
+        The hexadecimal representation of the number as a string.
+"""
     if number == 0:
         return "0"
 
@@ -159,7 +173,15 @@ def decimal_to_hexadecimal(number: int) -> str:
 
 
 def is_valid_number(number: str, base: int) -> bool:
-    """Return whether number contains only digits allowed by the selected base."""
+    """Return whether number contains only digits allowed by the selected base.
+
+    Args:
+        number: The number string to validate.
+            base: The numeric base that determines which digits are allowed.
+
+    Returns:
+        True when every character is valid for the selected base; otherwise False.
+"""
     if number == "":
         return False
 
@@ -173,14 +195,29 @@ def is_valid_number(number: str, base: int) -> bool:
 
 
 def digit_value(digit: str) -> int:
-    """Return the numeric value of one digit character (0-9, A-F)."""
+    """Return the numeric value of one digit character (0-9, A-F).
+
+    Args:
+        digit: A single digit character to convert.
+
+    Returns:
+        The integer value represented by the digit character.
+"""
     if digit.isdigit():
         return int(digit)
     return ord(digit.upper()) - ord("A") + 10
 
 
 def convert_to_decimal(number: str, base: int) -> int:
-    """Convert a valid binary, decimal, or hexadecimal string to decimal."""
+    """Convert a valid binary, decimal, or hexadecimal string to decimal.
+
+    Args:
+        number: The number string being converted.
+            base: The numeric base of the input number.
+
+    Returns:
+        The decimal integer represented by the input number.
+"""
     number = number.upper()
     decimal_number = 0
 
@@ -191,7 +228,14 @@ def convert_to_decimal(number: str, base: int) -> int:
 
 
 def base_name(base: int) -> str:
-    """Return the display name for a numeric base."""
+    """Return the display name for a numeric base.
+
+    Args:
+        base: The numeric base whose display name is needed.
+
+    Returns:
+        The human-readable name of the base.
+"""
     if base == 2:
         return "Binary"
     elif base == 16:
@@ -200,7 +244,14 @@ def base_name(base: int) -> str:
 
 
 def group_bits(binary: str) -> str:
-    """Left-pad a binary string to a multiple of 4 and group it in nibbles."""
+    """Left-pad a binary string to a multiple of 4 and group it in nibbles.
+
+    Args:
+        binary: The binary string to group into four-bit sections.
+
+    Returns:
+        A string containing the grouped binary digits.
+"""
     padding = (4 - len(binary) % 4) % 4
     padded = "0" * padding + binary
     groups = []
@@ -212,7 +263,15 @@ def group_bits(binary: str) -> str:
 
 
 def division_steps(number: int, base: int) -> str:
-    """Return a repeated-division trace as aligned monospace text."""
+    """Return a repeated-division trace as aligned monospace text.
+
+    Args:
+        number: The non-negative decimal number being divided.
+            base: The base used for repeated division.
+
+    Returns:
+        A multiline string showing each division, quotient, and remainder.
+"""
     digits = "0123456789ABCDEF"
 
     if number == 0:
@@ -234,7 +293,15 @@ def division_steps(number: int, base: int) -> str:
 
 
 def expansion(number: str, base: int) -> str:
-    """Return the positional expansion of a number, e.g. 'F x 16^1 + ...'."""
+    """Return the positional expansion of a number, e.g. 'F x 16^1 + ...'.
+
+    Args:
+        number: The number whose positional expansion is needed.
+            base: The numeric base of the number.
+
+    Returns:
+        A string showing each digit multiplied by its base power.
+"""
     number = number.upper()
     terms = []
     length = len(number)
@@ -249,7 +316,14 @@ def expansion(number: str, base: int) -> str:
 
 
 def result_report(state: State) -> str:
-    """Build the terminal-style result block for the current conversion."""
+    """Build the terminal-style result block for the current conversion.
+
+    Args:
+        state: The current application state containing the conversion result.
+
+    Returns:
+        A formatted string summarizing the input and converted values.
+"""
     binary_text = decimal_to_binary(state.decimal_result)
     hex_text = decimal_to_hexadecimal(state.decimal_result)
 
@@ -265,7 +339,14 @@ def result_report(state: State) -> str:
 
 
 def history_table(conversions: list[Conversion]) -> str:
-    """Format saved conversions as an aligned text table."""
+    """Format saved conversions as an aligned text table.
+
+    Args:
+        conversions: The list of Conversion records to display.
+
+    Returns:
+        A formatted string containing the saved conversion history.
+"""
     lines = [
         "#".ljust(4) + "INPUT".ljust(14) + "DECIMAL".ljust(12)
         + "BINARY".ljust(24) + "HEX",
@@ -286,7 +367,14 @@ def history_table(conversions: list[Conversion]) -> str:
 
 
 def nav_buttons() -> list:
-    """Return the navigation bar shown at the top of every page."""
+    """Return the navigation bar shown at the top of every page.
+
+    Args:
+        None.
+
+    Returns:
+        A list of buttons linking to the main website pages.
+"""
     return [
         Button("Home", "home"),
         Button("Converter", "converter"),
@@ -298,7 +386,14 @@ def nav_buttons() -> list:
 
 
 def conversion_page_content(state: State) -> list:
-    """Build the converter page content."""
+    """Build the converter page content.
+
+    Args:
+        state: The current application state used to display inputs and results.
+
+    Returns:
+        A list of Drafter page components for the converter page.
+"""
     content = [Header("Number Systems Lab"), "Converter"]
     content.extend(nav_buttons())
     content.extend([
@@ -356,13 +451,27 @@ def conversion_page_content(state: State) -> list:
 # ---------------------------------------------------------------------------
 @route
 def index(state: State) -> Page:
-    """Build the front page of the website."""
+    """Build the front page of the website.
+
+    Args:
+        state: The current application state passed to the home page.
+
+    Returns:
+        The Drafter home page.
+"""
     return home(state)
 
 
 @route
 def home(state: State) -> Page:
-    """Show the purpose of the website and its main navigation."""
+    """Show the purpose of the website and its main navigation.
+
+    Args:
+        state: The current application state for the page.
+
+    Returns:
+        The Drafter home page containing the project introduction and navigation.
+"""
     content = [Header("Number Systems Lab")]
     content.extend(nav_buttons())
     content.extend([
@@ -383,13 +492,29 @@ def home(state: State) -> Page:
 
 @route
 def converter(state: State) -> Page:
-    """Show the number conversion form."""
+    """Show the number conversion form.
+
+    Args:
+        state: The current application state containing conversion values.
+
+    Returns:
+        The Drafter converter page.
+"""
     return Page(state, conversion_page_content(state))
 
 
 @route
 def convert_number(state: State, number_text: str, input_base: str) -> Page:
-    """Validate the input, convert it, and save a successful conversion."""
+    """Validate the input, convert it, and save a successful conversion.
+
+    Args:
+        state: The current application state to update.
+            number_text: The number entered by the user.
+            input_base: The selected input number system.
+
+    Returns:
+        A Drafter page showing the conversion result or an input error.
+"""
     state.current_input = number_text.strip().upper()
 
     if input_base == "Binary":
@@ -428,7 +553,14 @@ def convert_number(state: State, number_text: str, input_base: str) -> Page:
 
 @route
 def history(state: State) -> Page:
-    """Show every successful conversion saved during this session."""
+    """Show every successful conversion saved during this session.
+
+    Args:
+        state: The current application state containing conversion history.
+
+    Returns:
+        The Drafter history page.
+"""
     content = [Header("Number Systems Lab"), "History"]
     content.extend(nav_buttons())
     content.extend([
@@ -453,7 +585,14 @@ def history(state: State) -> Page:
 
 @route
 def clear_history(state: State) -> Page:
-    """Remove all saved conversions from the current session."""
+    """Remove all saved conversions from the current session.
+
+    Args:
+        state: The current application state whose history will be cleared.
+
+    Returns:
+        The Drafter history page after the history has been cleared.
+"""
     state.conversion_history = []
     state.error_message = ""
     return history(state)
@@ -461,7 +600,14 @@ def clear_history(state: State) -> Page:
 
 @route
 def learn(state: State) -> Page:
-    """Teach the repeated-division and positional methods."""
+    """Teach the repeated-division and positional methods.
+
+    Args:
+        state: The current application state for the learning page.
+
+    Returns:
+        The Drafter learning page with explanations and worked examples.
+"""
     content = [Header("Number Systems Lab"), "Learn"]
     content.extend(nav_buttons())
     content.extend([
@@ -510,7 +656,14 @@ def learn(state: State) -> Page:
 
 @route
 def practice(state: State) -> Page:
-    """Show the current practice problem."""
+    """Show the current practice problem.
+
+    Args:
+        state: The current application state containing the practice number.
+
+    Returns:
+        The Drafter practice page with the current question and answer field.
+"""
     content = [Header("Number Systems Lab"), "Practice"]
     content.extend(nav_buttons())
     content.extend([
@@ -530,14 +683,29 @@ def practice(state: State) -> Page:
 
 @route
 def new_practice(state: State) -> Page:
-    """Create a new practice problem and display it."""
+    """Create a new practice problem and display it.
+
+    Args:
+        state: The current application state whose practice number will be changed.
+
+    Returns:
+        The Drafter practice page showing the new practice problem.
+"""
     state.practice_number += 7
     return practice(state)
 
 
 @route
 def check_answer(state: State, practice_answer: str) -> Page:
-    """Check the user's practice answer and show feedback."""
+    """Check the user's practice answer and show feedback.
+
+    Args:
+        state: The current application state containing the practice problem.
+            practice_answer: The binary answer submitted by the user.
+
+    Returns:
+        A Drafter page showing whether the submitted answer is correct.
+"""
     correct_answer = decimal_to_binary(state.practice_number)
     submitted = practice_answer.strip().upper()
 
@@ -575,7 +743,9 @@ def check_answer(state: State, practice_answer: str) -> Page:
 # ---------------------------------------------------------------------------
 # TESTS
 # ---------------------------------------------------------------------------
-# Unit tests for helper functions.
+# Unit tests for helper functions and route behavior.
+# Test state is kept local or inline so the module does not create global
+# application-state variables.
 assert_equal(decimal_to_binary(0), "0")
 assert_equal(decimal_to_binary(10), "1010")
 assert_equal(decimal_to_hexadecimal(255), "FF")
@@ -607,33 +777,24 @@ assert_equal(base_name(16), "Hexadecimal")
 assert_equal(division_steps(0, 2), "0 / 2 = 0   remainder 0   ->  0")
 assert_equal(len(division_steps(25, 2).split("\n")), 5)
 
-hex_result = convert_number(
-    State("", 10, "", 0, [], 25),
-    "FF",
-    "Hexadecimal"
-)
-assert_equal(hex_result.state.decimal_result, 255)
-assert_equal(
-    hex_result.state.conversion_history[-1].hexadecimal_value,
-    "FF"
-)
+assert_equal(convert_number(State("", 10, "", 0, [], 25), "FF", "Hexadecimal").state.decimal_result, 255)
+assert_equal(convert_number(State("", 10, "", 0, [], 25), "FF", "Hexadecimal").state.conversion_history[-1].hexadecimal_value, "FF")
 
-invalid_result = convert_number(
-    State("", 10, "", 0, [], 25),
-    "102",
-    "Binary"
-)
-assert_equal(invalid_result.state.error_message != "", True)
+assert_equal(convert_number(State("", 10, "", 0, [], 25), "102", "Binary").state.error_message != "", True)
 
-wrong_result = check_answer(
-    State("", 10, "", 0, [], 25),
-    "0"
-)
-assert_has(wrong_result, "Keep Practicing")
+assert_has(check_answer(State("", 10, "", 0, [], 25), "0"), "Keep Practicing")
 
-new_question_state = State("", 10, "", 0, [], 25)
-new_practice(new_question_state)
-assert_equal(new_question_state.practice_number, 32)
+def test_new_practice_changes_question() -> None:
+    """Test that the new-practice route changes the current question.
+
+    Returns:
+        None: The function raises an assertion error if the test fails.
+    """
+    new_question_state = State("", 10, "", 0, [], 25)
+    new_practice(new_question_state)
+    assert_equal(new_question_state.practice_number, 32)
+
+test_new_practice_changes_question()
 
 # At least one test for each route.
 assert_has(index(State("", 10, "", 0, [], 25)), Button("Converter", "converter"))
