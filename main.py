@@ -503,14 +503,19 @@ def converter(state: State) -> Page:
     return Page(state, conversion_page_content(state))
 
 
+# The form normally supplies number_text and input_base. Defaults keep the
+# route safe when someone opens the route URL directly without form data.
 @route
-def convert_number(state: State, number_text: str, input_base: str) -> Page:
+def convert_number(
+    state: State, number_text: str = "", input_base: str = "Decimal"
+) -> Page:
     """Validate the input, convert it, and save a successful conversion.
 
     Args:
         state: The current application state to update.
-            number_text: The number entered by the user.
-            input_base: The selected input number system.
+        number_text: The number entered by the user. Defaults to an empty string
+            when the route is opened directly without submitted form data.
+        input_base: The selected input number system. Defaults to Decimal.
 
     Returns:
         A Drafter page showing the conversion result or an input error.
@@ -695,13 +700,16 @@ def new_practice(state: State) -> Page:
     return practice(state)
 
 
+# The answer normally comes from the practice form. A default prevents a
+# direct route visit from failing because practice_answer is missing.
 @route
-def check_answer(state: State, practice_answer: str) -> Page:
+def check_answer(state: State, practice_answer: str = "") -> Page:
     """Check the user's practice answer and show feedback.
 
     Args:
         state: The current application state containing the practice problem.
-            practice_answer: The binary answer submitted by the user.
+        practice_answer: The binary answer submitted by the user. Defaults to an
+            empty string when the route is opened directly.
 
     Returns:
         A Drafter page showing whether the submitted answer is correct.
@@ -778,7 +786,12 @@ assert_equal(division_steps(0, 2), "0 / 2 = 0   remainder 0   ->  0")
 assert_equal(len(division_steps(25, 2).split("\n")), 5)
 
 assert_equal(convert_number(State("", 10, "", 0, [], 25), "FF", "Hexadecimal").state.decimal_result, 255)
-assert_equal(convert_number(State("", 10, "", 0, [], 25), "FF", "Hexadecimal").state.conversion_history[-1].hexadecimal_value, "FF")
+assert_equal(
+    convert_number(
+        State("", 10, "", 0, [], 25), "FF", "Hexadecimal"
+    ).state.conversion_history[-1].hexadecimal_value,
+    "FF"
+)
 
 assert_equal(convert_number(State("", 10, "", 0, [], 25), "102", "Binary").state.error_message != "", True)
 
