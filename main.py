@@ -11,12 +11,23 @@ set_website_style("pico")
 SANS = "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Courier New', monospace"
 
+add_website_css("html, body", """
+    background-color: #fafafa;
+    color-scheme: light;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+""")
 add_website_css("#drafter-body--", """
     background-color: #fafafa;
     color: #1f2937;
     font-family: """ + SANS + """;
+    width: 100%;
+    max-width: none;
     min-height: 100vh;
-    padding: 56px max(24px, calc((100vw - 720px) / 2)) 80px max(24px, calc((100vw - 720px) / 2));
+    box-sizing: border-box;
+    padding: 48px 8vw 80px 8vw;
 """)
 add_website_css("#drafter-body-- h1", """
     color: #111827;
@@ -62,6 +73,8 @@ add_website_css("#drafter-body-- button", """
     font-size: 0.9rem;
     font-weight: 500;
     padding: 9px 20px;
+    width: auto;
+    display: inline-block;
     margin: 4px 6px 4px 0;
     box-shadow: none;
     transition: background 0.15s ease, transform 0.15s ease;
